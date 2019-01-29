@@ -90,60 +90,25 @@ void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
     system("clear");
 }
 
-/*void addToBasket(std::map<int, std::map<std::string, std::string> > &stock, std::map<int, int> &Basket) {
-    std::cout << std::endl << std::setw(21) << "Menu" << "\n" << std::endl;
-    std::cout << std::setw(6) << "Code" << std::setw(11) << "Items" << std::setw(17) << "Price" << std::endl << std::endl;
+void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
+    cout << endl << "----------------------------------------------------" << endl;
+    printf("%fs%30s%15s\n", "Items", "Quantity", "Subtotal");
+    cout << endl << "----------------------------------------------------" << endl;
 
-    int lastStockNum = 0;
+    double subTotal = 0;
 
-    for (auto v: stock) {
-        std::cout << std::setw(6) << v.first << " " << std::setw(6) << v.second["name"] << std::setw(17) << v.second["price"] << std::endl;
-        lastStockNum = v.first;
-    }
-
-    std::cout << "\n\n\n";
-
-    int code = 0;
-    int confirm = 0;
-    int qty = 0;
-
-    while (confirm != 1) {
-        std::cout << "Enter Item's code (-1 to process): ";
-        std::cin >> code;
-        std::cin.ignore(100000, '\n');
-
-        if (code == -1) {
-            std::cout << "\n\n";
-            std::cout << std::endl << "-------------------------------" << std::endl;
-            std::cout << std::setw(7) << "Items" << std::setw(24) << "Quantity";
-            std::cout << std::endl << "-------------------------------" << std::endl;
-
-            for(auto v: Basket) {
-                if (v.second != 0){
-                    std::cout << "  " << stock[v.first]["name"] << std::setw(20) << v.second << std::endl;
-                }
-            }
-        } else if (code > lastStockNum || code < 1) {
-            std::cout << "Please enter a code that is on the menu..." << std::endl;
-            continue;
-        } else {
-            std::cout << "How many? ";
-            std::cin >> qty;
-            std::cin.ignore(100000, '\n');
-
-            Basket[code] += qty;
+    for (auto item: Basket) {
+        if (item.second > 0) {
+            printf("  %-24s%7d%13s%6.2f\n", stockItems[item.first].getName().c_str(), item.second, (stockItems[item.first].get_price() * item.first));
+            subTotal += (stockItems[item.first].get_price() * item.first);
         }
-
     }
-    system("clear");
-}*/
-
-void payOrder(map<int, Stock > &stock, map<int, int> &Basket) {
-
     system("clear");
 }
 
 int main() {
+
+    system("clear");
 
     map<int, Stock> stockItems;
     map<int, int> Basket;
@@ -174,6 +139,7 @@ int main() {
                 break;
             case 2:
                 payOrder(stockItems, Basket);
+                break;
         }
     }
 
