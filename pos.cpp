@@ -96,6 +96,15 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
     cout << endl << "----------------------------------------------------" << endl;
 
     double subTotal = 0;
+    double discount = 0;
+    double gst = 0;
+    double tax = 0;
+    double total = 0;
+    double pay = 0;
+    double change = 0;
+    double roundTotal = 0;
+    int member = 0;
+    int round = 0;
 
     for (auto item: Basket) {
         if (item.second > 0) {
@@ -103,6 +112,51 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
             subTotal += (stockItems[item.first].get_price() * item.first);
         }
     }
+
+    cout << endl << "Are you a member ( 1 = Yes, Other = No ) ? ";
+    cin >> member;
+
+    if (member == 1) {
+        discount = subTotal * 0.05;
+    }
+
+    gst = 0.10 * (subTotal - discount);
+    tax = 0.10 * (subTotal - discount);
+    total = subTotal - discount + gst + tax;
+    round = (int) ceil(total * 100);
+
+    while (round % 5 != 0) {
+        ++round;
+    }
+
+    roundTotal = round / 100.0;
+
+    printf("\n  %-26sRM%6.2f\n", "Subtotal:", subTotal);
+	printf("  %-26sRM%6.2f\n", "Discount:", discount);
+	printf("  %-26sRM%6.2f\n", "GST:", gst);
+	printf("  %-26sRM%6.2f\n", "Service Tax:", tax);
+	printf("  %-26sRM%6.2f\n", "Total:", total);
+	printf("\n  %-26sRM%6.2f\n", "Total (round off):", roundTotal);
+
+    cout << endl << endl << "======================================" << endl;
+    cout << endl << " Enter amount to pay: " << setw(8) << "$";
+    cin >> pay;
+    cout << endl << endl << "======================================" << endl;
+
+    change = pay - roundTotal;
+
+    if (change > 0.0) {
+        printf("  Your change is:%13s%6.2f\n\n", "$", change);
+        cout << "  Thank you!" << endl << endl;
+    } else if (change < 0.0) {
+        printf("  Please pay another %9s %.2f\n\n  ", "$", -1 * change);
+    } else {
+        cout << endl << "  Thank you!" << endl;
+    }
+
+    getchar();
+    getchar();
+
     system("clear");
 }
 
