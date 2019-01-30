@@ -63,3 +63,6 @@ typings/
 # CPP files...
 a.out
 stock.db
+*.o
+orders.db
+pos

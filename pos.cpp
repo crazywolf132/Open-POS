@@ -1,18 +1,18 @@
-#include "Stock.h"
+#include "orders.h"
 
-
-Stock::Stock(int id, string n, double p) {
-    id = id;
-    name = n;
-    price = p;
+void _clear_screan( ) {
+    #ifdef _WIN32 || _WIN64
+    system("clr");
+    #else
+    system("clear");
+    #endif
 }
 
-void Stock::display() const {
-    printf("%-20s $%5.2f\n", name.c_str(), price);
-}
-
-double Stock::get_price() const {
-    return price;
+void resetBasket(map<int, int> &Basket)
+{
+    for (auto item : Basket) {
+        item.second = 0;
+    }
 }
 
 void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
@@ -87,10 +87,10 @@ void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
             Basket[code] += qty;
         }
     }
-    system("clear");
+    _clear_screan();
 }
 
-void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
+void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order> orders) {
     cout << endl << "----------------------------------------------------" << endl;
     printf("%s%30s%15s\n", "Items", "Quantity", "Subtotal");
     cout << endl << "----------------------------------------------------" << endl;
@@ -105,6 +105,8 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
     double roundTotal = 0;
     int member = 0;
     int round = 0;
+    bool finishedPaying = false;
+    double paidSoFar = 0;
 
     for (auto item: Basket) {
         if (item.second > 0) {
@@ -138,45 +140,77 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
 	printf("  %-26s$ %6.2f\n", "Total:", total);
 	printf("\n  %-26s$ %6.2f\n", "Total (round off):", roundTotal);
 
-    cout << endl << endl << "======================================" << endl;
-    cout << endl << " Enter amount to pay: " << setw(8) << "$";
-    cin >> pay;
-    cout << endl << endl << "======================================" << endl;
+    while (!finishedPaying) {
+        cout << endl << endl << "======================================" << endl;
+        cout << endl << " Enter amount to pay: " << setw(8) << "$";
+        cin >> pay;
+        cout << endl << endl << "======================================" << endl;
 
-    change = pay - roundTotal;
+        change = (pay + paidSoFar) - roundTotal;
 
-    if (change > 0.0) {
-        printf("  Your change is:%13s%6.2f\n\n", "$", change);
-        cout << "  Thank you!" << endl << endl;
-    } else if (change < 0.0) {
-        printf("  Please pay another %9s %.2f\n\n  ", "$", -1 * change);
-    } else {
-        cout << endl << "  Thank you!" << endl;
+        if (change > 0.0) {
+            printf("  Your change is:%13s%6.2f\n\n", "$", change);
+            cout << "  Thank you!" << endl << endl;
+            finishedPaying = true;
+        } else if (change < 0.0) {
+            printf("  Please pay another %9s %.2f\n\n  ", "$", -1 * change);
+            paidSoFar = pay;
+        } else {
+            cout << endl << "  Thank you!" << endl;
+            finishedPaying = true;
+        }
+    }
+    
+
+    cout << endl << " Press ENTER to return to the Option Menu. ";
+    getchar();
+    getchar();
+
+    map<int, Stock> parts;
+    for (auto item : Basket) {
+        if (item.second > 0) {
+            parts.insert(parts.end(), pair<int, Stock>(item.second, stockItems[item.first]));
+        }
+    }
+    Order currentOrder(total, parts, member == 1 ? true : false);
+    orders.push_back(currentOrder);
+
+    resetBasket(Basket);
+
+    _clear_screan();
+}
+
+void listOTrans(vector< Order > &orders) {
+    cout << endl << "----------------------------------------------------" << endl;
+    printf("%s%15s%15s\n", "Item Count", "Total", "Is A Member?");
+    cout << endl << "----------------------------------------------------" << endl;
+
+    for (auto order: orders) {
+        cout << "There is an order" << endl;
+        printf("%s%15s%15s\n", order.itemCount(), order.getTotal(), order.getMemberStatus());
     }
 
-    getchar();
-    getchar();
-
-    system("clear");
 }
 
 int main() {
 
-    system("clear");
+    _clear_screan();
 
     map<int, Stock> stockItems;
     map<int, int> Basket;
+    vector< Order > orders;
 
     addStock(stockItems, Basket);
 
     int selected = 0;
 
-    while (selected != 3) {
+    while (selected != 4) {
         cout << "\n Welcome to OPEN POS v1.0.1" << endl;
         cout << "Please choose one of the following options..." << endl << endl << endl;
         cout << "1]    Place Order" << endl;
         cout << "2]    Calculate and print the bill" << endl;
-        cout << "3]    Exit" << endl;
+        cout << "3]    List of transactions" << endl;
+        cout << "4]    Exit" << endl;
         
         cout << endl << "Enter Option: ";
         cin >> selected;
@@ -184,15 +218,13 @@ int main() {
         system("clear");
         switch(selected) {
             case 1:
-                /*for(auto v: stock) {
-                    for(auto i: v.second) {
-                        std::cout << v.first << " : " << i.first << " : " << i.second << std::endl;
-                    }
-                }*/
                 addToBasket(stockItems, Basket);
                 break;
             case 2:
-                payOrder(stockItems, Basket);
+                payOrder(stockItems, Basket, orders);
+                break;
+            case 3:
+                listOTrans(orders);
                 break;
         }
     }

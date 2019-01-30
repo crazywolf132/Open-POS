@@ -28,8 +28,9 @@ class Stock {
         Stock( ) = default;
         void display() const;
         const string& getName() const { return name; }
-        double get_price() const;
-    private:
+        const double get_price() const { return price; }
+
+      private:
         int id = 0;
         string name = "";
         double price = 0.00;
