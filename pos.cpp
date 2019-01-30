@@ -92,7 +92,7 @@ void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
 
 void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
     cout << endl << "----------------------------------------------------" << endl;
-    printf("%fs%30s%15s\n", "Items", "Quantity", "Subtotal");
+    printf("%s%30s%15s\n", "Items", "Quantity", "Subtotal");
     cout << endl << "----------------------------------------------------" << endl;
 
     double subTotal = 0;
@@ -108,8 +108,8 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
 
     for (auto item: Basket) {
         if (item.second > 0) {
-            printf("  %-24s%7d%13s%6.2f\n", stockItems[item.first].getName().c_str(), item.second, (stockItems[item.first].get_price() * item.first));
-            subTotal += (stockItems[item.first].get_price() * item.first);
+            printf("%-24s%7d%13s%6.2f\n", stockItems[item.first].getName().c_str(), item.second, (stockItems[item.first].get_price() * item.second));
+            subTotal += (stockItems[item.first].get_price() * item.second);
         }
     }
 
@@ -131,12 +131,12 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket) {
 
     roundTotal = round / 100.0;
 
-    printf("\n  %-26sRM%6.2f\n", "Subtotal:", subTotal);
-	printf("  %-26sRM%6.2f\n", "Discount:", discount);
-	printf("  %-26sRM%6.2f\n", "GST:", gst);
-	printf("  %-26sRM%6.2f\n", "Service Tax:", tax);
-	printf("  %-26sRM%6.2f\n", "Total:", total);
-	printf("\n  %-26sRM%6.2f\n", "Total (round off):", roundTotal);
+    printf("\n  %-26s$ %6.2f\n", "Subtotal:", subTotal);
+	printf("  %-26s$ %6.2f\n", "Discount:", discount);
+	printf("  %-26s$ %6.2f\n", "GST:", gst);
+	printf("  %-26s$ %6.2f\n", "Service Tax:", tax);
+	printf("  %-26s$ %6.2f\n", "Total:", total);
+	printf("\n  %-26s$ %6.2f\n", "Total (round off):", roundTotal);
 
     cout << endl << endl << "======================================" << endl;
     cout << endl << " Enter amount to pay: " << setw(8) << "$";
