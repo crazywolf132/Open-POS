@@ -180,7 +180,6 @@ void listOTrans(vector< Order > &orders) {
     cout << endl << "----------------------------------------------------" << endl;
     cout << "Item Count" <<  setw(15) << "Total" <<  setw(15) << "Is a Member?" << endl;
     cout << endl << "----------------------------------------------------" << endl;
-    cout << orders.size() << endl;
     for (auto order: orders) {
         if (order.itemCount > 0) {
             // This is just incase that something went wrong, and an order with no items was processed.
