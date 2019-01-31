@@ -1,18 +1,11 @@
 #include "orders.h"
 
-void _clear_screan( ) {
+void _clear_screen( ) {
     #ifdef _WIN32 || _WIN64
     system("clr");
     #else
     system("clear");
     #endif
-}
-
-void resetBasket(map<int, int> &Basket)
-{
-    for (auto item : Basket) {
-        item.second = 0;
-    }
 }
 
 void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
@@ -87,10 +80,10 @@ void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
             Basket[code] += qty;
         }
     }
-    _clear_screan();
+    _clear_screen();
 }
 
-void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order> orders) {
+void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order> &orders) {
     cout << endl << "----------------------------------------------------" << endl;
     printf("%s%30s%15s\n", "Items", "Quantity", "Subtotal");
     cout << endl << "----------------------------------------------------" << endl;
@@ -170,31 +163,38 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order
     for (auto item : Basket) {
         if (item.second > 0) {
             parts.insert(parts.end(), pair<int, Stock>(item.second, stockItems[item.first]));
+            Basket[item.first] = 0;
         }
     }
     Order currentOrder(total, parts, member == 1 ? true : false);
     orders.push_back(currentOrder);
 
-    resetBasket(Basket);
+    cout << orders.size() << endl;
 
-    _clear_screan();
+    _clear_screen();
 }
 
 void listOTrans(vector< Order > &orders) {
     cout << endl << "----------------------------------------------------" << endl;
     printf("%s%15s%15s\n", "Item Count", "Total", "Is A Member?");
     cout << endl << "----------------------------------------------------" << endl;
-
+    cout << orders.size() << endl;
     for (auto order: orders) {
         cout << "There is an order" << endl;
-        printf("%s%15s%15s\n", order.itemCount(), order.getTotal(), order.getMemberStatus());
+        // printf("%s%15s%15s\n", order.itemCount(), order.getTotal(), order.getMemberStatus());
     }
+
+    cout << endl << " Press ENTER to return to the Option Menu. ";
+    getchar();
+    getchar();
+
+    _clear_screen();
 
 }
 
 int main() {
 
-    _clear_screan();
+    _clear_screen();
 
     map<int, Stock> stockItems;
     map<int, int> Basket;
@@ -205,6 +205,7 @@ int main() {
     int selected = 0;
 
     while (selected != 4) {
+        _clear_screen();
         cout << "\n Welcome to OPEN POS v1.0.1" << endl;
         cout << "Please choose one of the following options..." << endl << endl << endl;
         cout << "1]    Place Order" << endl;
@@ -215,7 +216,6 @@ int main() {
         cout << endl << "Enter Option: ";
         cin >> selected;
 
-        system("clear");
         switch(selected) {
             case 1:
                 addToBasket(stockItems, Basket);
