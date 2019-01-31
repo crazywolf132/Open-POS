@@ -40,6 +40,8 @@ void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
 }
 
 void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
+    _clear_screen();
+
     int code = 0, qty = 0, confirm = 0;
 
     cout << endl << setw(21) << "Menu" << endl << endl;
@@ -126,12 +128,12 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order
 
     roundTotal = round / 100.0;
 
-    printf("\n  %-26s$ %6.2f\n", "Subtotal:", subTotal);
-	printf("  %-26s$ %6.2f\n", "Discount:", discount);
-	printf("  %-26s$ %6.2f\n", "GST:", gst);
-	printf("  %-26s$ %6.2f\n", "Service Tax:", tax);
-	printf("  %-26s$ %6.2f\n", "Total:", total);
-	printf("\n  %-26s$ %6.2f\n", "Total (round off):", roundTotal);
+    printf("\n  %-26s$%6.2f\n", "Subtotal:", subTotal);
+	printf("  %-26s$%6.2f\n", "Discount:", discount);
+	printf("  %-26s$%6.2f\n", "GST:", gst);
+	printf("  %-26s$%6.2f\n", "Service Tax:", tax);
+	printf("  %-26s$%6.2f\n", "Total:", total);
+	printf("\n  %-26s$%6.2f\n", "Total (round off):", roundTotal);
 
     while (!finishedPaying) {
         cout << endl << endl << "======================================" << endl;
@@ -176,12 +178,14 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order
 
 void listOTrans(vector< Order > &orders) {
     cout << endl << "----------------------------------------------------" << endl;
-    printf("%s%15s%15s\n", "Item Count", "Total", "Is A Member?");
+    cout << "Item Count" <<  setw(15) << "Total" <<  setw(15) << "Is a Member?" << endl;
     cout << endl << "----------------------------------------------------" << endl;
     cout << orders.size() << endl;
     for (auto order: orders) {
-        cout << "There is an order" << endl;
-        // printf("%s%15s%15s\n", order.itemCount(), order.getTotal(), order.getMemberStatus());
+        if (order.itemCount > 0) {
+            // This is just incase that something went wrong, and an order with no items was processed.
+            order.display();
+        }
     }
 
     cout << endl << " Press ENTER to return to the Option Menu. ";

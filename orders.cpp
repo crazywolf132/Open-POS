@@ -3,9 +3,7 @@
 Order::Order(double t, map<int, Stock> o, bool im) : total(t), order(o), isMember(im) {}
 
 void Order::display( ) const {
-    for (auto item: order) {
-        item.second.display();
-    }
+    cout << itemCount() << setw(15) << getTotal() << setw(15) << getMemberStatus() << endl;
 }
 
 int Order::itemCount( ) const {
