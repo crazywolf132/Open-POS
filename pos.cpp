@@ -8,6 +8,14 @@ void _clear_screen( ) {
     #endif
 }
 
+void loadTrans(vector < Order > &orders) {
+    ifstream fin("transactions.db");
+
+    if (fin.fail()) {
+        cout << "Error opening transactions db!" << endl;
+    }
+}
+
 void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
 {
     ifstream fin("stock.db");
@@ -193,6 +201,10 @@ void listOTrans(vector< Order > &orders) {
 
     _clear_screen();
 
+}
+
+void saveTrans(vector< Order > &orders) {
+    
 }
 
 int main() {
