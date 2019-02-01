@@ -1,4 +1,4 @@
-#include "orders.h"
+#include "pos.h"
 
 void _clear_screen( ) {
     #ifdef _WIN32 || _WIN64
@@ -8,7 +8,7 @@ void _clear_screen( ) {
     #endif
 }
 
-void loadTrans(vector < Order > &orders) {
+void loadTrans( TRANS & trans ) {
     ifstream fin("transactions.db");
 
     if (fin.fail()) {
@@ -16,7 +16,7 @@ void loadTrans(vector < Order > &orders) {
     }
 }
 
-void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
+void addStock( STOCKITEMS &stockItems, BASKET &Basket )
 {
     ifstream fin("stock.db");
 
@@ -47,7 +47,7 @@ void addStock(map<int, Stock> &stockItems, map<int, int> &Basket)
     }
 }
 
-void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
+void addToBasket( STOCKITEMS &stockItems, BASKET &Basket ) {
     _clear_screen();
 
     int code = 0, qty = 0, confirm = 0;
@@ -93,7 +93,7 @@ void addToBasket(map<int, Stock> &stockItems, map<int, int> &Basket) {
     _clear_screen();
 }
 
-void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order> &orders) {
+void payOrder( STOCKITEMS &stockItems, BASKET &Basket, TRANS &trans) {
     cout << endl << "----------------------------------------------------" << endl;
     printf("%s%30s%15s\n", "Items", "Quantity", "Subtotal");
     cout << endl << "----------------------------------------------------" << endl;
@@ -184,7 +184,7 @@ void payOrder(map<int, Stock > &stockItems, map<int, int> &Basket, vector< Order
     _clear_screen();
 }
 
-void listOTrans(vector< Order > &orders) {
+void listOTrans( TRANS &trans ) {
     cout << endl << "----------------------------------------------------" << endl;
     cout << "Item Count" <<  setw(15) << "Total" <<  setw(15) << "Is a Member?" << endl;
     cout << endl << "----------------------------------------------------" << endl;
@@ -203,7 +203,7 @@ void listOTrans(vector< Order > &orders) {
 
 }
 
-void saveTrans(vector< Order > &orders) {
+void saveTrans( TRANS & trans ) {
     
 }
 
@@ -211,11 +211,11 @@ int main() {
 
     _clear_screen();
 
-    map<int, Stock> stockItems;
-    map<int, int> Basket;
-    vector< Order > orders;
+    STOCKITEMS stockItems;
+    BASKET basket;
+    TRANS trans;
 
-    addStock(stockItems, Basket);
+    addStock(stockItems, basket);
 
     int selected = 0;
 
@@ -233,13 +233,13 @@ int main() {
 
         switch(selected) {
             case 1:
-                addToBasket(stockItems, Basket);
+                addToBasket(stockItems, basket);
                 break;
             case 2:
-                payOrder(stockItems, Basket, orders);
+                payOrder(stockItems, basket, trans);
                 break;
             case 3:
-                listOTrans(orders);
+                listOTrans(trans);
                 break;
         }
     }
